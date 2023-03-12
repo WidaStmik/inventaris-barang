@@ -15,12 +15,23 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { HiOutlineMail, HiOutlineMailOpen } from "react-icons/hi";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/services/firebase";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import { MdOutlineSpaceDashboard } from "react-icons/md";
+import {
+  FaBox,
+  FaBoxes,
+  FaCopy,
+  FaPrint,
+  FaTools,
+  FaTruck,
+  FaUsers,
+} from "react-icons/fa";
+import { Tooltip, Avatar, Menu, MenuItem } from "@mui/material";
 
-const drawerWidth = 240;
+const drawerWidth = 300;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -69,14 +80,29 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function Layout({ children }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedOut, setLoggedOut] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const router = useRouter();
 
   const WHITELIST = ["/login"];
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      toast.success("Berhasil logout");
+      setLoggedOut(true);
+      router.push("/login");
+    } catch (error) {
+      toast.error("Gagal logout");
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -106,8 +132,10 @@ export default function Layout({ children }) {
 
   if (!loggedIn && !WHITELIST.includes(router.pathname)) {
     // remove toast
-    toast.dismiss();
-    toast.error("Silahkan login terlebih dahulu");
+    if (!loggedOut) {
+      toast.dismiss();
+      toast.error("Silahkan login terlebih dahulu");
+    }
     router.push("/login");
   }
 
@@ -119,21 +147,101 @@ export default function Layout({ children }) {
     router.push("/");
   }
 
+  const menuOpen = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   if (loggedIn && !WHITELIST.includes(router.pathname))
     return (
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
         <AppBar position="fixed" open={open}>
-          <Toolbar>
+          <Toolbar
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <IconButton
               color="inherit"
               aria-label="open drawer"
               onClick={handleDrawerOpen}
               edge="start"
-              sx={{ mr: 2, ...(open && { display: "none" }) }}
+              sx={{ mr: 2, ...(open && { opacity: 0 }) }}
             >
               <AiOutlineMenuUnfold />
             </IconButton>
+            <React.Fragment>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  textAlign: "center",
+                }}
+              >
+                <Tooltip title="Account settings">
+                  <IconButton
+                    onClick={handleClick}
+                    size="small"
+                    sx={{ ml: 2 }}
+                    aria-controls={menuOpen ? "account-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={menuOpen ? "true" : undefined}
+                  >
+                    <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+                  </IconButton>
+                </Tooltip>
+              </Box>
+              <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={menuOpen}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "& .MuiAvatar-root": {
+                      width: 32,
+                      height: 32,
+                      ml: -0.5,
+                      mr: 1,
+                    },
+                    "&:before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "background.paper",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <Avatar /> Profile
+                </MenuItem>
+                <Divider />
+                <MenuItem>Add another account</MenuItem>
+                <MenuItem>Settings</MenuItem>
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </Menu>
+            </React.Fragment>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -143,6 +251,8 @@ export default function Layout({ children }) {
             "& .MuiDrawer-paper": {
               width: drawerWidth,
               boxSizing: "border-box",
+              backgroundColor: "#2C3333",
+              color: "whitesmoke",
             },
           }}
           variant="persistent"
@@ -152,46 +262,141 @@ export default function Layout({ children }) {
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "ltr" ? (
-                <BsChevronLeft />
+                <BsChevronLeft color="whitesmoke" />
               ) : (
-                <BsChevronRight />
+                <BsChevronRight color="whitesmoke" />
               )}
             </IconButton>
           </DrawerHeader>
+
+          <section>
+            <List>
+              <Link href="/" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <MdOutlineSpaceDashboard size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Dashboard"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </List>
+          </section>
+
+          <section>
+            <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventory</div>
+            <Divider />
+            <List>
+              <Link href="/data-barang" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaBoxes size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Data Barang"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/alat-lab" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaTools size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Alat Lab"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/peminjaman" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaCopy size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Peminjaman"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/transaksi" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaTruck size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Transaksi Barang Masuk"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/cetak-laporan" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaPrint size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Cetak Laporan Barang"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </List>
+          </section>
+
+          <section>
+            <div style={{ marginLeft: 20, marginBottom: 10 }}>Master</div>
+            <Divider />
+            <List>
+              <Link href="/barang" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaBox size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Pengelolaan Barang"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/users" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaUsers size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Manajemen User"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            </List>
+          </section>
           <Divider />
-          <List>
-            {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? (
-                      <HiOutlineMailOpen />
-                    ) : (
-                      <HiOutlineMail />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-          <Divider />
-          <List>
-            {["All mail", "Trash", "Spam"].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index % 2 === 0 ? (
-                      <HiOutlineMailOpen />
-                    ) : (
-                      <HiOutlineMail />
-                    )}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
         </Drawer>
         <Main open={open}>
           <DrawerHeader />

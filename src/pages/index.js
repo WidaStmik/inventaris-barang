@@ -1,5 +1,13 @@
 import React from "react";
+import Head from "next/head";
 
 export default function Dashboard() {
-  return <div>Dashboard</div>;
+  return (
+    <div>
+      <Head>
+        <title>Dashboard</title>
+      </Head>
+      Dashboard
+    </div>
+  );
 }
