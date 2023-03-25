@@ -15,7 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/services/firebase";
 import toast from "react-hot-toast";
 import Link from "next/link";
@@ -28,9 +28,13 @@ import {
   FaTools,
   FaTruck,
   FaUsers,
+  FaTruckLoading,
 } from "react-icons/fa";
 import { Tooltip, Avatar, Menu, MenuItem } from "@mui/material";
 import Loading from "@/components/loading";
+import { useDispatch } from "react-redux";
+import { setUser, setAuth } from "@/redux/user";
+import { getUser } from "@/services/auth";
 
 const drawerWidth = 325;
 
@@ -80,12 +84,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function Layout({ children }) {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [loggedOut, setLoggedOut] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [user, loading, error] = useAuthState(auth);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -105,20 +108,6 @@ export default function Layout({ children }) {
     }
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setLoggedIn(true);
-      } else {
-        setLoggedIn(false);
-      }
-
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -131,20 +120,15 @@ export default function Layout({ children }) {
     return <Loading />;
   }
 
-  if (!loggedIn && !WHITELIST.includes(router.pathname)) {
-    // remove toast
-    if (!loggedOut) {
-      toast.dismiss();
-      toast.error("Silahkan login terlebih dahulu");
-    }
+  if (!user && !WHITELIST.includes(router.pathname)) {
     router.push("/login");
   }
 
-  if (!loggedIn && WHITELIST.includes(router.pathname)) {
+  if (!user && WHITELIST.includes(router.pathname)) {
     return <>{children}</>;
   }
 
-  if (loggedIn && WHITELIST.includes(router.pathname)) {
+  if (user && WHITELIST.includes(router.pathname)) {
     router.push("/");
   }
 
@@ -157,7 +141,11 @@ export default function Layout({ children }) {
     setAnchorEl(null);
   };
 
-  if (loggedIn && !WHITELIST.includes(router.pathname))
+  if (user && !WHITELIST.includes(router.pathname)) {
+    dispatch(setAuth(user));
+    getUser(user.uid).then((res) => {
+      dispatch(setUser(res));
+    });
     return (
       <Box
         sx={{
@@ -365,7 +353,7 @@ export default function Layout({ children }) {
                 </ListItem>
               </Link>
 
-              <Link href="/transaksi" style={{ color: "whitesmoke" }}>
+              <Link href="/transaksi-masuk" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -373,6 +361,20 @@ export default function Layout({ children }) {
                     </ListItemIcon>
                     <ListItemText
                       primary="Transaksi Barang Masuk"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/transaksi-keluar" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <FaTruckLoading size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Transaksi Barang Keluar"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
@@ -435,4 +437,5 @@ export default function Layout({ children }) {
         </Main>
       </Box>
     );
+  }
 }
