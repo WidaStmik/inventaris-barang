@@ -10,10 +10,16 @@ import {
   Button,
 } from "@mui/material";
 import styles from "./index.module.css";
+import { useRouter } from "next/router";
 
 export default function TransaksiMasuk() {
+  const router = useRouter();
   const handleSubmit = (e) => {
     e.preventDefault();
+  };
+
+  const handleAdd = () => {
+    router.push("/barang");
   };
   return (
     <div>
@@ -37,7 +43,7 @@ export default function TransaksiMasuk() {
               >
                 <MenuItem value="barang1">Barang 1</MenuItem>
               </Select>
-              <Button variant="contained" color="primary">
+              <Button onClick={handleAdd} variant="contained" color="primary">
                 +
               </Button>
             </div>
@@ -55,7 +61,7 @@ export default function TransaksiMasuk() {
               >
                 <MenuItem value="ruangan1">Ruangan 1</MenuItem>
               </Select>
-              <Button variant="contained" color="primary">
+              <Button onClick={handleAdd} variant="contained" color="primary">
                 +
               </Button>
             </div>
