@@ -30,8 +30,9 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { Tooltip, Avatar, Menu, MenuItem } from "@mui/material";
+import Loading from "@/components/loading";
 
-const drawerWidth = 300;
+const drawerWidth = 325;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
   ({ theme, open }) => ({
@@ -127,7 +128,7 @@ export default function Layout({ children }) {
   };
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Loading />;
   }
 
   if (!loggedIn && !WHITELIST.includes(router.pathname)) {
@@ -259,7 +260,30 @@ export default function Layout({ children }) {
           anchor="left"
           open={open}
         >
-          <DrawerHeader>
+          <DrawerHeader
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: 2,
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                }}
+              >
+                <Avatar sx={{ width: 48, height: 48 }} src="logo.jpg" />
+                <div>
+                  <div>Sistem Inventasi Barang</div>
+                  <div style={{ fontSize: 12 }}>SMK Pasundan 2 Bandung</div>
+                </div>
+              </div>
+            </div>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === "ltr" ? (
                 <BsChevronLeft color="whitesmoke" />
@@ -268,6 +292,7 @@ export default function Layout({ children }) {
               )}
             </IconButton>
           </DrawerHeader>
+          <Divider sx={{ backgroundColor: "whitesmoke" }} />
 
           <section>
             <List>
@@ -289,7 +314,7 @@ export default function Layout({ children }) {
 
           <section>
             <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventory</div>
-            <Divider />
+            <Divider sx={{ backgroundColor: "whitesmoke" }} />
             <List>
               <Link href="/data-barang" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
@@ -365,7 +390,7 @@ export default function Layout({ children }) {
 
           <section>
             <div style={{ marginLeft: 20, marginBottom: 10 }}>Master</div>
-            <Divider />
+            <Divider sx={{ backgroundColor: "whitesmoke" }} />
             <List>
               <Link href="/barang" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
@@ -396,7 +421,6 @@ export default function Layout({ children }) {
               </Link>
             </List>
           </section>
-          <Divider />
         </Drawer>
         <Main open={open}>
           <DrawerHeader />
