@@ -11,11 +11,38 @@ import {
 } from "@mui/material";
 import styles from "./index.module.css";
 import { useRouter } from "next/router";
+import {
+  useNamaBarang,
+  useKondisi,
+  useRuangan,
+  transaksiMasuk,
+} from "@/services/barang";
+import toast from "react-hot-toast";
 
 export default function TransaksiMasuk() {
   const router = useRouter();
-  const handleSubmit = (e) => {
+
+  const namaBarang = useNamaBarang();
+  const kondisi = useKondisi();
+  const ruangan = useRuangan();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = {
+      barangId: e.target.barang.value,
+      kondisiId: e.target.kondisi.value,
+      ruanganId: e.target.ruangan.value,
+      jumlah: e.target.jumlah.value,
+    };
+
+    await toast.promise(transaksiMasuk(data), {
+      loading: "Menyimpan data",
+      success: "Transaksi berhasil",
+      error: "Transaksi gagal",
+    });
+
+    e.target.reset();
   };
 
   const handleAdd = () => {
@@ -40,8 +67,13 @@ export default function TransaksiMasuk() {
                 label="Barang"
                 fullWidth
                 variant="outlined"
+                name="barang"
               >
-                <MenuItem value="barang1">Barang 1</MenuItem>
+                {namaBarang.map((barang) => (
+                  <MenuItem value={barang.id} key={barang.id}>
+                    {barang.namaBarang}
+                  </MenuItem>
+                ))}
               </Select>
               <Button onClick={handleAdd} variant="contained" color="primary">
                 +
@@ -58,8 +90,13 @@ export default function TransaksiMasuk() {
                 label="ruangan"
                 fullWidth
                 variant="outlined"
+                name="ruangan"
               >
-                <MenuItem value="ruangan1">Ruangan 1</MenuItem>
+                {ruangan.map((ruangan) => (
+                  <MenuItem value={ruangan.id} key={ruangan.id}>
+                    {ruangan.namaRuangan}
+                  </MenuItem>
+                ))}
               </Select>
               <Button onClick={handleAdd} variant="contained" color="primary">
                 +
@@ -73,6 +110,8 @@ export default function TransaksiMasuk() {
               label="Jumlah"
               variant="outlined"
               fullWidth
+              type="number"
+              name="jumlah"
             />
           </FormControl>
 
@@ -85,8 +124,13 @@ export default function TransaksiMasuk() {
                 label="kondisi"
                 fullWidth
                 variant="outlined"
+                name="kondisi"
               >
-                <MenuItem value="kondisi1">Kondisi 1</MenuItem>
+                {kondisi.map((k) => (
+                  <MenuItem value={k.id} key={k.id}>
+                    {k.namaKondisi}
+                  </MenuItem>
+                ))}
               </Select>
             </div>
           </FormControl>

@@ -4,6 +4,8 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
@@ -135,4 +137,35 @@ export const useKondisi = () => {
   }, []);
 
   return kondisi;
+};
+
+export const transaksiMasuk = async (transaksi) => {
+  try {
+    const docRef = await addDoc(collection(db, "barang"), transaksi);
+
+    const jumlah = transaksi.jumlah;
+    const barang = transaksi.barangId;
+
+    const barangRef = doc(db, "nama-barang", barang);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const stok = barangData.stok || 0;
+      const stokBaru = stok + parseInt(jumlah);
+
+      await updateDoc(barangRef, {
+        stok: stokBaru,
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
 };
