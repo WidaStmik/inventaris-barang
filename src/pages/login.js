@@ -7,6 +7,7 @@ import { auth } from "@/services/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Login() {
   const router = useRouter();
@@ -29,6 +30,9 @@ export default function Login() {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <title>Login</title>
+      </Head>
       <div className={styles.login}>
         <h1 className={styles.title}>LAB TAV</h1>
         <form className={styles.form} onSubmit={handleLogin}>
