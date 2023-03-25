@@ -159,7 +159,14 @@ export default function Layout({ children }) {
 
   if (loggedIn && !WHITELIST.includes(router.pathname))
     return (
-      <Box sx={{ display: "flex" }}>
+      <Box
+        sx={{
+          display: "flex",
+          backgroundColor: "#f5f5fb",
+          minHeight: "100vh",
+          overflow: "auto",
+        }}
+      >
         <CssBaseline />
         <AppBar position="fixed" open={open}>
           <Toolbar
