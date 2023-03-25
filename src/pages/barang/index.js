@@ -10,6 +10,8 @@ import NamaBarang from "@/components/barang/NamaBarang";
 import BarangDialog from "@/components/barang/BarangDialog";
 import Ruangan from "@/components/barang/Ruangan";
 import RuanganDialog from "@/components/barang/RuanganDialog";
+import Kondisi from "@/components/barang/Kondisi";
+import KondisiDialog from "@/components/barang/KondisiDialog";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -77,7 +79,7 @@ export default function Barang() {
         <TabPanel value={value} index={1}>
           <Card elevation={2} className={styles.card}>
             <div className={styles.header}>
-              <div className={styles.cardHeading}>Daftar Nama Barang</div>
+              <div className={styles.cardHeading}>Daftar Ruangan</div>
               <RuanganDialog />
             </div>
 
@@ -85,7 +87,14 @@ export default function Barang() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <Card elevation={2} className={styles.card}>
+            <div className={styles.header}>
+              <div className={styles.cardHeading}>Daftar Kondisi</div>
+              <KondisiDialog />
+            </div>
+
+            <Kondisi />
+          </Card>
         </TabPanel>
       </Box>
     </div>

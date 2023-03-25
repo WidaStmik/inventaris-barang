@@ -48,6 +48,26 @@ export const deleteRuang = async (id) => {
   }
 };
 
+export const addKondisi = async (kondisi) => {
+  try {
+    const docRef = await addDoc(collection(db, "kondisi"), kondisi);
+
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
+
+export const deleteKondisi = async (id) => {
+  try {
+    await deleteDoc(doc(db, "kondisi", id));
+  } catch (e) {
+    console.error("Error removing document: ", e);
+    throw e;
+  }
+};
+
 export const useNamaBarang = () => {
   const [namaBarang, setNamaBarang] = useState([]);
 
@@ -92,4 +112,27 @@ export const useRuangan = () => {
   }, []);
 
   return ruangan;
+};
+
+export const useKondisi = () => {
+  const [kondisi, setKondisi] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "kondisi"),
+      (querySnapshot) => {
+        const data = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+
+        setKondisi(data);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  return kondisi;
 };
