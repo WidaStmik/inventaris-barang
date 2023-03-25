@@ -28,6 +28,26 @@ export const deleteBarang = async (id) => {
   }
 };
 
+export const addRuang = async (ruang) => {
+  try {
+    const docRef = await addDoc(collection(db, "ruangan"), ruang);
+
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
+
+export const deleteRuang = async (id) => {
+  try {
+    await deleteDoc(doc(db, "ruangan", id));
+  } catch (e) {
+    console.error("Error removing document: ", e);
+    throw e;
+  }
+};
+
 export const useNamaBarang = () => {
   const [namaBarang, setNamaBarang] = useState([]);
 
@@ -49,4 +69,27 @@ export const useNamaBarang = () => {
   }, []);
 
   return namaBarang;
+};
+
+export const useRuangan = () => {
+  const [ruangan, setRuangan] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "ruangan"),
+      (querySnapshot) => {
+        const data = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({ id: doc.id, ...doc.data() });
+        });
+
+        setRuangan(data);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  return ruangan;
 };

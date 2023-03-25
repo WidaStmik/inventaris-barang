@@ -8,6 +8,8 @@ import { Card } from "@mui/material";
 import styles from "./index.module.css";
 import NamaBarang from "@/components/barang/NamaBarang";
 import BarangDialog from "@/components/barang/BarangDialog";
+import Ruangan from "@/components/barang/Ruangan";
+import RuanganDialog from "@/components/barang/RuanganDialog";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -73,7 +75,14 @@ export default function Barang() {
           </Card>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <Card elevation={2} className={styles.card}>
+            <div className={styles.header}>
+              <div className={styles.cardHeading}>Daftar Nama Barang</div>
+              <RuanganDialog />
+            </div>
+
+            <Ruangan />
+          </Card>
         </TabPanel>
         <TabPanel value={value} index={2}>
           Item Three
