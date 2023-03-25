@@ -292,7 +292,7 @@ export default function Layout({ children }) {
               )}
             </IconButton>
           </DrawerHeader>
-          <Divider sx={{ backgroundColor: "whitesmoke" }} />
+          <Divider sx={{ backgroundColor: "gray" }} />
 
           <section>
             <List>
@@ -314,7 +314,7 @@ export default function Layout({ children }) {
 
           <section>
             <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventory</div>
-            <Divider sx={{ backgroundColor: "whitesmoke" }} />
+            <Divider sx={{ backgroundColor: "gray" }} />
             <List>
               <Link href="/data-barang" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
@@ -390,7 +390,7 @@ export default function Layout({ children }) {
 
           <section>
             <div style={{ marginLeft: 20, marginBottom: 10 }}>Master</div>
-            <Divider sx={{ backgroundColor: "whitesmoke" }} />
+            <Divider sx={{ backgroundColor: "gray" }} />
             <List>
               <Link href="/barang" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
