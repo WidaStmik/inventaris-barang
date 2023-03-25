@@ -18,10 +18,13 @@ import {
   transaksiMasuk,
 } from "@/services/barang";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { selectAuth } from "@/redux/user";
 
 export default function TransaksiMasuk() {
   const router = useRouter();
 
+  const { uid } = useSelector(selectAuth);
   const namaBarang = useNamaBarang();
   const kondisi = useKondisi();
   const ruangan = useRuangan();
@@ -34,7 +37,24 @@ export default function TransaksiMasuk() {
       kondisiId: e.target.kondisi.value,
       ruanganId: e.target.ruangan.value,
       jumlah: e.target.jumlah.value,
+      tanggal_masuk: new Date(),
+      userId: uid,
     };
+
+    if (
+      data.barangId === "" ||
+      data.kondisiId === "" ||
+      data.ruanganId === "" ||
+      data.jumlah === ""
+    ) {
+      toast.error("Semua field harus diisi");
+      return;
+    }
+
+    if (data.jumlah <= 0) {
+      toast.error("Jumlah barang tidak boleh kurang dari 1");
+      return;
+    }
 
     await toast.promise(transaksiMasuk(data), {
       loading: "Menyimpan data",

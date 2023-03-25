@@ -169,3 +169,43 @@ export const transaksiMasuk = async (transaksi) => {
     throw e;
   }
 };
+
+export const useDataBarang = () => {
+  const [dataBarang, setDataBarang] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "barang"),
+      (querySnapshot) => {
+        const data = [];
+
+        querySnapshot.forEach(async (docs) => {
+          const barang = await getDoc(
+            doc(db, "nama-barang", docs.data().barangId)
+          );
+          const kondisi = await getDoc(
+            doc(db, "kondisi", docs.data().kondisiId)
+          );
+          const ruangan = await getDoc(
+            doc(db, "ruangan", docs.data().ruanganId)
+          );
+          const user = await getDoc(doc(db, "users", docs.data().userId));
+          data.push({
+            id: docs.id,
+            barang: barang.data(),
+            kondisi: kondisi.data(),
+            ruangan: ruangan.data(),
+            user: { ...user.data(), id: user.id },
+            ...docs.data(),
+          });
+        });
+
+        setDataBarang(data);
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  return dataBarang;
+};

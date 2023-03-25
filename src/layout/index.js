@@ -311,7 +311,11 @@ export default function Layout({ children }) {
             <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventory</div>
             <Divider sx={{ backgroundColor: "gray" }} />
             <List>
-              <Link href="/data-barang" style={{ color: "whitesmoke" }}>
+              <Link
+                href="/data-barang"
+                style={{ color: "whitesmoke" }}
+                id="nav-data-barang"
+              >
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>

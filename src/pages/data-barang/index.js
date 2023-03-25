@@ -1,43 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-
-const DUMMY_DATA = Array.from({ length: 100 }, (_, index) => ({
-  id: index + 1,
-  nama: `Nama Barang ${index + 1}`,
-  kondisi: `Kondisi Barang ${index + 1}`,
-  ruangan: `Ruangan ${index + 1}`,
-  tanggal_masuk: new Date(
-    Math.floor(Math.random() * 1000000000000)
-  ).toLocaleDateString(),
-  user: `User ${index + 1}`,
-  tindakan: {
-    detail: {
-      key: "detail",
-      label: "Detail",
-      fn: () => {
-        alert("Detail");
-      },
-    },
-    edit: {
-      key: "edit",
-      label: "Edit",
-      fn: () => {
-        alert("Edit");
-      },
-    },
-    delete: {
-      key: "delete",
-      label: "Hapus",
-      fn: () => {
-        alert("Delete");
-      },
-    },
-  },
-}));
+import { useDataBarang } from "@/services/barang";
 
 export default function DataBarang() {
+  const data = useDataBarang();
+  const [trigger, setTrigger] = useState(false);
+
+  const tableData = data.map((item) => ({
+    id: item.id,
+    nama: item.barang.namaBarang,
+    kondisi: item.kondisi.namaKondisi,
+    ruangan: item.ruangan.namaRuangan,
+    tanggal_masuk: item.tanggal_masuk?.toDate().toLocaleDateString("id-ID"),
+    user: item.user.displayName || item.user.id,
+    tindakan: {
+      detail: {
+        key: "detail",
+        label: "Detail",
+        fn: () => {
+          alert("Detail");
+        },
+      },
+      edit: {
+        key: "edit",
+        label: "Edit",
+        fn: () => {
+          alert("Edit");
+        },
+      },
+      delete: {
+        key: "delete",
+        label: "Hapus",
+        fn: () => {
+          alert("Delete");
+        },
+      },
+    },
+  }));
+
+  useEffect(() => {
+    document.getElementById("nav-data-barang").click();
+  }, [tableData]);
+
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "nama", headerName: "Nama Barang", width: 200 },
@@ -95,7 +101,7 @@ export default function DataBarang() {
 
         <div style={{ height: 600, width: "100%" }}>
           <DataGrid
-            rows={DUMMY_DATA}
+            rows={tableData}
             columns={columns}
             pageSize={5}
             components={{ Toolbar: GridToolbarQuickFilter }}
