@@ -15,7 +15,6 @@ import {
   useNamaBarang,
   useKondisi,
   useRuangan,
-  transaksiKeluar,
   pinjamBarang,
 } from "@/services/barang";
 import toast from "react-hot-toast";

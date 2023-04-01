@@ -356,7 +356,11 @@ export default function Layout({ children }) {
                 </ListItem>
               </Link>
 
-              <Link href="/pengembalian" style={{ color: "whitesmoke" }}>
+              <Link
+                href="/pengembalian"
+                style={{ color: "whitesmoke" }}
+                id="nav-pengembalian"
+              >
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>

@@ -9,7 +9,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
 
 export const addBarang = async (barang) => {
   try {
@@ -243,35 +242,94 @@ export const pinjamBarang = async (transaksi) => {
   }
 };
 
-export const kembalikanBarang = async (transaksi) => {
+export const kembalikanBarang = async (peminjamanId) => {
   try {
-    const docRef = await addDoc(collection(db, "peminjaman"), transaksi);
+    const peminjamanRef = doc(db, "peminjaman", peminjamanId);
+    const peminjamanDoc = await getDoc(peminjamanRef);
 
-    const jumlah = transaksi.jumlah;
-    const barang = transaksi.barangId;
+    if (peminjamanDoc.exists()) {
+      const peminjamanData = peminjamanDoc.data();
+      const jumlah = peminjamanData.jumlah;
+      const barang = peminjamanData.barangId;
 
-    const barangRef = doc(db, "nama-barang", barang);
-    const barangDoc = await getDoc(barangRef);
+      const barangRef = doc(db, "nama-barang", barang);
+      const barangDoc = await getDoc(barangRef);
 
-    if (barangDoc.exists()) {
-      const barangData = barangDoc.data();
-      const stok = barangData.stok || 0;
-      const stokBaru = stok + parseInt(jumlah);
+      if (barangDoc.exists()) {
+        const barangData = barangDoc.data();
+        const stok = barangData.stok || 0;
+        const stokBaru = stok + parseInt(jumlah);
 
-      await updateDoc(barangRef, {
-        stok: stokBaru,
-      });
+        await updateDoc(barangRef, {
+          stok: stokBaru,
+        });
+
+        await updateDoc(peminjamanRef, {
+          kembali: true,
+        });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        throw new Error("No such document!");
+      }
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
       throw new Error("No such document!");
     }
-
-    return docRef.id;
   } catch (e) {
     console.error("Error adding document: ", e);
     throw e;
   }
+};
+
+export const useDataPeminjaman = () => {
+  const [dataPeminjaman, setDataPeminjaman] = useState([]);
+
+  useEffect(() => {
+    setDataPeminjaman([]);
+    const unsubscribe = onSnapshot(
+      collection(db, "peminjaman"),
+      async (querySnapshot) => {
+        querySnapshot.forEach(async (docs) => {
+          const data = docs.data();
+          const barang = await getDoc(doc(db, "nama-barang", data.barangId));
+          const user = await getDoc(doc(db, "users", data.userId));
+          const ruangan = await getDoc(doc(db, "ruangan", data.ruanganId));
+
+          if (dataPeminjaman.find((item) => item.id === docs.id)) {
+            if (data.kembali) {
+              setDataPeminjaman((prev) => {
+                return prev.filter((item) => item.id !== docs.id);
+              });
+            }
+          }
+
+          if (!data.kembali)
+            setDataPeminjaman((prev) => {
+              if (prev.find((item) => item.id === docs.id)) {
+                return prev;
+              } else {
+                return [
+                  ...prev,
+                  {
+                    id: docs.id,
+                    barang: barang.data(),
+                    ruangan: ruangan.data(),
+                    user: user.data(),
+                    ...data,
+                  },
+                ];
+              }
+            });
+        });
+      }
+    );
+
+    return unsubscribe;
+  }, []);
+
+  return dataPeminjaman;
 };
 
 export const useDataBarang = () => {
