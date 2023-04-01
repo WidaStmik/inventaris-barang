@@ -13,7 +13,10 @@ export default function DataBarang() {
     nama: item.barang.namaBarang,
     kondisi: item.kondisi.namaKondisi,
     ruangan: item.ruangan.namaRuangan,
-    tanggal_masuk: item.tanggal_masuk?.toDate().toLocaleDateString("id-ID"),
+    tanggal_masuk:
+      item.tanggal_masuk?.toDate().toLocaleDateString("id-ID") || "-",
+    tanggal_keluar:
+      item.tanggal_keluar?.toDate().toLocaleDateString("id-ID") || "-",
     user: item.user.displayName || item.user.id,
     tindakan: {
       detail: {
@@ -41,7 +44,8 @@ export default function DataBarang() {
   }));
 
   useEffect(() => {
-    document.getElementById("nav-data-barang").click();
+    if (tableData.length === 0)
+      document.getElementById("nav-data-barang").click();
   }, [tableData]);
 
   const columns = [
@@ -50,6 +54,11 @@ export default function DataBarang() {
     { field: "kondisi", headerName: "Kondisi", width: 200 },
     { field: "ruangan", headerName: "Ruangan", width: 200 },
     { field: "tanggal_masuk", headerName: "Tanggal Masuk", width: 200 },
+    {
+      field: "tanggal_keluar",
+      headerName: "Tanggal Keluar",
+      width: 200,
+    },
     { field: "user", headerName: "User", width: 200 },
     {
       field: "tindakan",

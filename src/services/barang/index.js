@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
 
 export const addBarang = async (barang) => {
   try {
@@ -170,6 +171,109 @@ export const transaksiMasuk = async (transaksi) => {
   }
 };
 
+export const transaksiKeluar = async (transaksi) => {
+  try {
+    const jumlah = transaksi.jumlah;
+    const barang = transaksi.barangId;
+
+    const barangRef = doc(db, "nama-barang", barang);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const stok = barangData.stok || 0;
+      const stokBaru = stok - parseInt(jumlah);
+
+      if (stokBaru < 0) {
+        throw "Stok tidak cukup";
+      }
+
+      await updateDoc(barangRef, {
+        stok: stokBaru,
+      });
+
+      await addDoc(collection(db, "barang"), {
+        ...transaksi,
+        jumlah: -transaksi.jumlah,
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
+
+export const pinjamBarang = async (transaksi) => {
+  try {
+    const jumlah = transaksi.jumlah;
+    const barang = transaksi.barangId;
+
+    const barangRef = doc(db, "nama-barang", barang);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const stok = barangData.stok || 0;
+      const stokBaru = stok - parseInt(jumlah);
+
+      if (stokBaru < 0) {
+        throw "Stok tidak cukup";
+      }
+
+      await updateDoc(barangRef, {
+        stok: stokBaru,
+      });
+
+      await addDoc(collection(db, "peminjaman"), {
+        ...transaksi,
+        jumlah: -transaksi.jumlah,
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
+
+export const kembalikanBarang = async (transaksi) => {
+  try {
+    const docRef = await addDoc(collection(db, "peminjaman"), transaksi);
+
+    const jumlah = transaksi.jumlah;
+    const barang = transaksi.barangId;
+
+    const barangRef = doc(db, "nama-barang", barang);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const stok = barangData.stok || 0;
+      const stokBaru = stok + parseInt(jumlah);
+
+      await updateDoc(barangRef, {
+        stok: stokBaru,
+      });
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+
+    return docRef.id;
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    throw e;
+  }
+};
+
 export const useDataBarang = () => {
   const [dataBarang, setDataBarang] = useState([]);
 
@@ -177,30 +281,25 @@ export const useDataBarang = () => {
     const unsubscribe = onSnapshot(
       collection(db, "barang"),
       (querySnapshot) => {
-        const data = [];
+        const retunedData = [];
 
         querySnapshot.forEach(async (docs) => {
-          const barang = await getDoc(
-            doc(db, "nama-barang", docs.data().barangId)
-          );
-          const kondisi = await getDoc(
-            doc(db, "kondisi", docs.data().kondisiId)
-          );
-          const ruangan = await getDoc(
-            doc(db, "ruangan", docs.data().ruanganId)
-          );
-          const user = await getDoc(doc(db, "users", docs.data().userId));
-          data.push({
+          const data = docs.data();
+          const barang = await getDoc(doc(db, "nama-barang", data.barangId));
+          const kondisi = await getDoc(doc(db, "kondisi", data.kondisiId));
+          const ruangan = await getDoc(doc(db, "ruangan", data.ruanganId));
+          const user = await getDoc(doc(db, "users", data.userId));
+          retunedData.push({
             id: docs.id,
             barang: barang.data(),
             kondisi: kondisi.data(),
             ruangan: ruangan.data(),
             user: { ...user.data(), id: user.id },
-            ...docs.data(),
+            ...data,
           });
         });
 
-        setDataBarang(data);
+        setDataBarang(retunedData);
       }
     );
 

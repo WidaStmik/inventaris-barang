@@ -30,6 +30,7 @@ import {
   FaUsers,
   FaTruckLoading,
 } from "react-icons/fa";
+import { TbTruckReturn } from "react-icons/tb";
 import { Tooltip, Avatar, Menu, MenuItem } from "@mui/material";
 import Loading from "@/components/loading";
 import { useDispatch } from "react-redux";
@@ -233,8 +234,6 @@ export default function Layout({ children }) {
                   <Avatar /> Profile
                 </MenuItem>
                 <Divider />
-                <MenuItem>Add another account</MenuItem>
-                <MenuItem>Settings</MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </React.Fragment>
@@ -329,14 +328,14 @@ export default function Layout({ children }) {
                 </ListItem>
               </Link>
 
-              <Link href="/alat-lab" style={{ color: "whitesmoke" }}>
+              <Link href="/alat-praktikum" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
                       <FaTools size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Alat Lab"
+                      primary="Alat Praktikum"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
@@ -351,6 +350,20 @@ export default function Layout({ children }) {
                     </ListItemIcon>
                     <ListItemText
                       primary="Peminjaman"
+                      sx={{ marginLeft: "-20px" }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+
+              <Link href="/pengembalian" style={{ color: "whitesmoke" }}>
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <TbTruckReturn size={25} color="whitesmoke" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Pengembalian"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
