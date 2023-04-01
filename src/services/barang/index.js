@@ -6,6 +6,9 @@ import {
   doc,
   updateDoc,
   getDoc,
+  getDocs,
+  where,
+  query,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { useState, useEffect } from "react";
@@ -26,6 +29,37 @@ export const deleteBarang = async (id) => {
     await deleteDoc(doc(db, "nama-barang", id));
   } catch (e) {
     console.error("Error removing document: ", e);
+    throw e;
+  }
+};
+
+export const getBarangByRuangan = async (ruanganId) => {
+  try {
+    const barang = [];
+
+    const querySnapshot = await getDocs(
+      query(collection(db, "barang"), where("ruanganId", "==", ruanganId))
+    );
+
+    await Promise.all(
+      querySnapshot.docs.map(async (docs) => {
+        const data = docs.data();
+        const ruangan = await getDoc(doc(db, "ruangan", data.ruanganId));
+        const kondisi = await getDoc(doc(db, "kondisi", data.kondisiId));
+        const barangDoc = await getDoc(doc(db, "nama-barang", data.barangId));
+        barang.push({
+          id: docs.id,
+          ...data,
+          ruangan: ruangan.data(),
+          kondisi: kondisi.data(),
+          barang: barangDoc.data(),
+        });
+      })
+    );
+
+    return barang;
+  } catch (e) {
+    console.error("Error getting document: ", e);
     throw e;
   }
 };

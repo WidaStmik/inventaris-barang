@@ -60,27 +60,22 @@ export default function Peminjaman() {
           <div className={styles.cardHeading}>Form Pengembalian Barang</div>
           <FormControl fullWidth>
             <InputLabel id="barang-label">Barang</InputLabel>
-            <div className={styles.formGroup}>
-              <Select
-                labelId="barang-label"
-                id="barang"
-                label="Barang"
-                fullWidth
-                variant="outlined"
-                name="barang"
-              >
-                {peminjaman.map((i) => (
-                  <MenuItem value={i.id} key={i.id}>
-                    {i.user.displayName || i.user.email} - {i.barang.namaBarang}
-                    {" - "}
-                    {i.tanggal_keluar.toDate().toLocaleDateString()}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Button onClick={handleAdd} variant="contained" color="primary">
-                +
-              </Button>
-            </div>
+            <Select
+              labelId="barang-label"
+              id="barang"
+              label="Barang"
+              fullWidth
+              variant="outlined"
+              name="barang"
+            >
+              {peminjaman.map((i) => (
+                <MenuItem value={i.id} key={i.id}>
+                  {i.user.displayName || i.user.email} - {i.barang.namaBarang}
+                  {" - "}
+                  {i.tanggal_keluar.toDate().toLocaleDateString()}
+                </MenuItem>
+              ))}
+            </Select>
           </FormControl>
 
           <Button variant="contained" color="primary" fullWidth type="submit">
