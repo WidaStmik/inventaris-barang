@@ -436,7 +436,7 @@ export default function Layout({ children }) {
                 </ListItem>
               </Link>
 
-              <Link href="/users" style={{ color: "whitesmoke" }}>
+              {/* <Link href="/users" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -448,7 +448,7 @@ export default function Layout({ children }) {
                     />
                   </ListItemButton>
                 </ListItem>
-              </Link>
+              </Link> */}
             </List>
           </section>
         </Drawer>
