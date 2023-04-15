@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { DataGrid, GridToolbarQuickFilter } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-import { useDataBarang } from "@/services/barang";
+import { useDataBarang, deleteDataBarang } from "@/services/barang";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 export default function DataBarang() {
   const data = useDataBarang();
   const [trigger, setTrigger] = useState(false);
+  const router = useRouter();
 
   const tableData = data.map((item) => ({
     id: item.id,
@@ -36,8 +39,17 @@ export default function DataBarang() {
       delete: {
         key: "delete",
         label: "Hapus",
-        fn: () => {
-          alert("Delete");
+        fn: async () => {
+          toast.promise(deleteDataBarang(item.id), {
+            loading: "Menghapus data barang",
+            success: () => {
+              setTrigger(!trigger);
+              return "Data barang berhasil dihapus";
+            },
+            error: (err) => {
+              return err.message;
+            },
+          });
         },
       },
     },
@@ -74,7 +86,7 @@ export default function DataBarang() {
               gap: 10,
             }}
           >
-            <Button
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={params.value.detail.fn}
@@ -87,7 +99,7 @@ export default function DataBarang() {
               onClick={params.value.edit.fn}
             >
               {params.value.edit.label}
-            </Button>
+            </Button> */}
             <Button
               color="error"
               variant="contained"
@@ -106,8 +118,24 @@ export default function DataBarang() {
         <title>Data Barang</title>
       </Head>
       <div>
-        <div className="heading">Data Barang</div>
-
+        <div
+          className="heading"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 10,
+          }}
+        >
+          <span>Data Barang</span>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => router.push("/barang")}
+          >
+            Tambah Data
+          </Button>
+        </div>
         <div style={{ height: 600, width: "100%" }}>
           <DataGrid
             rows={tableData}

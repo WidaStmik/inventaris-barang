@@ -400,3 +400,41 @@ export const useDataBarang = () => {
 
   return dataBarang;
 };
+
+export const deleteDataBarang = async (id) => {
+  try {
+    // get data barang
+    const barangRef = doc(db, "barang", id);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const jumlah = barangData.jumlah;
+      const barang = barangData.barangId;
+
+      const barangRef = doc(db, "nama-barang", barang);
+      const stokBarang = await getDoc(barangRef);
+
+      if (stokBarang.exists()) {
+        const stokBarangData = stokBarang.data();
+        const stok = stokBarangData.stok || 0;
+        const stokBaru = stok + parseInt(jumlah);
+
+        await updateDoc(barangRef, {
+          stok: stokBaru,
+        });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        throw new Error("No such document!");
+      }
+      await deleteDoc(doc(db, "barang", id));
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+  } catch (e) {
+    console.error("Error removing document: ", e);
+  }
+};
