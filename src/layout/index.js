@@ -290,7 +290,7 @@ export default function Layout({ children }) {
 
           <section>
             <List>
-              <Link href="/" style={{ color: "whitesmoke" }}>
+              <Link href="/" style={{ color: "whitesmoke" }} id="nav-dashboard">
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
