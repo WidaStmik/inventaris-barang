@@ -1,49 +1,57 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
-import { FaBox, FaTags, FaTasks, FaUsers } from "react-icons/fa";
+import { FaBoxes, FaCopy, FaPrint, FaTools, FaTruck, FaUsers, FaTruckLoading,} from "react-icons/fa";
+import { TbTruckReturn } from "react-icons/tb";
 import styles from "./index.module.css";
 import { Card } from "@mui/material";
 import Link from "next/link";
 import {
   useDataPeminjaman,
   useDataBarang,
-  useRuangan,
 } from "@/services/barang";
 
 export default function Dashboard() {
   const peminjaman = useDataPeminjaman();
   const dataBarang = useDataBarang();
   const pengembalian = useDataPeminjaman();
-  const ruangan = useRuangan();
+  const TransaksiMasuk = useDataBarang();
+  const TransaksiKeluar = useDataBarang();
 
   const data = [
     {
       label: "Barang",
-      icon: FaBox,
+      icon: FaBoxes,
       value: dataBarang.length,
       color: "lightblue",
       href: "/data-barang",
     },
     {
       label: "Peminjaman",
-      icon: FaTags,
+      icon: FaCopy,
       value: peminjaman.length,
       color: "red",
       href: "/peminjaman",
     },
     {
       label: "Pengembalian",
-      icon: FaTasks,
+      icon: TbTruckReturn,
       value: pengembalian.length,
       color: "green",
       href: "/pengembalian",
     },
     {
-      label: "Ruangan",
-      icon: FaTasks,
-      value: ruangan.length,
-      color: "green",
-      href: "/barang",
+      label: "Transaksi Barang Masuk",
+      icon: FaTruck,
+      value: TransaksiMasuk.length,
+      color: "purple",
+      href: "/transaksi-masuk",
+    },
+    {
+      label: "Transaksi Barang Keluar",
+      icon: FaTruckLoading,
+      value: TransaksiKeluar.length,
+      color: "grey",
+      href: "/transaksi-keluar",
     },
   ];
 
