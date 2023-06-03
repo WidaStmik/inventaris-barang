@@ -13,7 +13,7 @@ export default function DataBarang() {
 
   const tableData = data.map((item) => ({
     id: item.id,
-    nama: item.barang.namaBarang,
+    nama: item.barang?.namaBarang,
     kondisi: item.kondisi.namaKondisi,
     ruangan: item.ruangan.namaRuangan,
     tanggal_masuk:

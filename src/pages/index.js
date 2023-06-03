@@ -5,16 +5,15 @@ import styles from "./index.module.css";
 import { Card } from "@mui/material";
 import Link from "next/link";
 import {
-  useNamaBarang,
+  useDataPeminjaman,
   useDataBarang,
-  useKondisi,
   useRuangan,
 } from "@/services/barang";
 
 export default function Dashboard() {
-  const namaBarang = useNamaBarang();
+  const peminjaman = useDataPeminjaman();
   const dataBarang = useDataBarang();
-  const kondisi = useKondisi();
+  const pengembalian = useDataPeminjaman();
   const ruangan = useRuangan();
 
   const data = [
@@ -26,18 +25,18 @@ export default function Dashboard() {
       href: "/data-barang",
     },
     {
-      label: "Nama Barang",
+      label: "Peminjaman",
       icon: FaTags,
-      value: namaBarang.length,
+      value: peminjaman.length,
       color: "red",
-      href: "/barang",
+      href: "/peminjaman",
     },
     {
-      label: "Kondisi",
+      label: "Pengembalian",
       icon: FaTasks,
-      value: kondisi.length,
+      value: pengembalian.length,
       color: "green",
-      href: "/barang",
+      href: "/pengembalian",
     },
     {
       label: "Ruangan",

@@ -70,7 +70,7 @@ export default function Peminjaman() {
             >
               {peminjaman.map((i) => (
                 <MenuItem value={i.id} key={i.id}>
-                  {i.user.displayName || i.user.email} - {i.barang.namaBarang}
+                  {i.user.displayName || i.user.email} - {i.barang?.namaBarang}
                   {" - "}
                   {i.tanggal_keluar.toDate().toLocaleDateString()}
                 </MenuItem>
