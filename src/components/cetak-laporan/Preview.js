@@ -9,8 +9,8 @@ function Preview({ ruanganId, ruangan }, ref) {
 
   const tableData = barang.map((item) => ({
     id: item.id,
-    kode: item.barang.kodeBarang,
-    nama: item.barang.namaBarang,
+    kode: item.barang?.kodeBarang,
+    nama: item.barang?.namaBarang,
     jumlah: item.jumlah,
     kondisi: item.kondisi.namaKondisi,
     ruangan: item.ruangan.namaRuangan,
