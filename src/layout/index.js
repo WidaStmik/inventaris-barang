@@ -36,6 +36,7 @@ import Loading from "@/components/loading";
 import { useDispatch } from "react-redux";
 import { setUser, setAuth } from "@/redux/user";
 import { getUser } from "@/services/auth";
+import { signOut } from 'firebase/auth'
 
 const drawerWidth = 325;
 

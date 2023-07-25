@@ -131,6 +131,7 @@ export default function DataBarang() {
           <Button
             variant="contained"
             color="primary"
+            style={{marginRight: "200px"}}
             onClick={() => router.push("/barang")}
           >
             Tambah Data
