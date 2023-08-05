@@ -74,7 +74,7 @@ export default function TransaksiKeluar() {
         <title>Transaksi Keluar</title>
       </Head>
       <form className={styles.container} onSubmit={handleSubmit}>
-        <div className="heading">Transaksi Barang Keluar</div>
+        <div className="heading">Transaksi Inventaris Barang Keluar</div>
 
         <Card elevation={2} className={styles.card}>
           <div className={styles.cardHeading}>Form Transaksi Keluar</div>

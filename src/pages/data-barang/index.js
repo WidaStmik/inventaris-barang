@@ -127,7 +127,7 @@ export default function DataBarang() {
             gap: 10,
           }}
         >
-          <span>Data Barang</span>
+          <span>Data Inventaris Barang</span>
           <Button
             variant="contained"
             color="primary"

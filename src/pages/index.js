@@ -40,14 +40,14 @@ export default function Dashboard() {
       href: "/pengembalian",
     },
     {
-      label: "Transaksi Barang Masuk",
+      label: "Transaksi Masuk",
       icon: FaTruck,
       value: TransaksiMasuk.length,
       color: "purple",
       href: "/transaksi-masuk",
     },
     {
-      label: "Transaksi Barang Keluar",
+      label: "Transaksi Keluar",
       icon: FaTruckLoading,
       value: TransaksiKeluar.length,
       color: "grey",

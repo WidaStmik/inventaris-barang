@@ -74,7 +74,7 @@ export default function Peminjaman() {
         <title>Peminjaman</title>
       </Head>
       <form className={styles.container} onSubmit={handleSubmit}>
-        <div className="heading">Peminjaman Barang</div>
+        <div className="heading">Peminjaman Inventaris Barang</div>
 
         <Card elevation={2} className={styles.card}>
           <div className={styles.cardHeading}>Form Peminjaman Barang</div>

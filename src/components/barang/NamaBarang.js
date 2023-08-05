@@ -31,8 +31,8 @@ export default function NamaBarang() {
   }));
 
   const columns = [
-    { field: "kode", headerName: "Kode", width: 150 },
-    { field: "nama", headerName: "Nama", width: 150 },
+    { field: "kode", headerName: "Kode Inventaris", width: 150 },
+    { field: "nama", headerName: "Nama Barang Inventaris", width: 200 },
     { field: "stok", headerName: "Stok", width: 150 },
     {
       field: "actions",

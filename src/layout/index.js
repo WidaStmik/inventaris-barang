@@ -308,7 +308,7 @@ export default function Layout({ children }) {
           </section>
 
           <section>
-            <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventory</div>
+            <div style={{ marginLeft: 20, marginBottom: 10 }}>Inventaris Barang</div>
             <Divider sx={{ backgroundColor: "gray" }} />
             <List>
               <Link
@@ -322,14 +322,14 @@ export default function Layout({ children }) {
                       <FaBoxes size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Data Barang"
+                      primary="Data Inventaris Barang"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
                 </ListItem>
               </Link>
 
-              <Link href="/alat-praktikum" style={{ color: "whitesmoke" }}>
+              {/* <Link href="/alat-praktikum" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
                   <ListItemButton>
                     <ListItemIcon>
@@ -341,7 +341,7 @@ export default function Layout({ children }) {
                     />
                   </ListItemButton>
                 </ListItem>
-              </Link>
+              </Link> */}
 
               <Link href="/peminjaman" style={{ color: "whitesmoke" }}>
                 <ListItem disablePadding>
@@ -382,7 +382,7 @@ export default function Layout({ children }) {
                       <FaTruck size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Transaksi Barang Masuk"
+                      primary="Transaksi Inventaris Barang Masuk"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
@@ -396,7 +396,7 @@ export default function Layout({ children }) {
                       <FaTruckLoading size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Transaksi Barang Keluar"
+                      primary="Transaksi Inventaris Barang Keluar"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
@@ -410,7 +410,7 @@ export default function Layout({ children }) {
                       <FaPrint size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Cetak Laporan Barang"
+                      primary="Cetak Laporan Inventaris Barang"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>
@@ -430,7 +430,7 @@ export default function Layout({ children }) {
                       <FaBox size={25} color="whitesmoke" />
                     </ListItemIcon>
                     <ListItemText
-                      primary="Pengelolaan Barang"
+                      primary="Pengelolaan Inventaris Barang"
                       sx={{ marginLeft: "-20px" }}
                     />
                   </ListItemButton>

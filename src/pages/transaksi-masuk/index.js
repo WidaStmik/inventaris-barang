@@ -74,7 +74,7 @@ export default function TransaksiMasuk() {
         <title>Transaksi Masuk</title>
       </Head>
       <form className={styles.container} onSubmit={handleSubmit}>
-        <div className="heading">Transaksi Barang Masuk</div>
+        <div className="heading">Transaksi Inventaris Barang Masuk</div>
 
         <Card elevation={2} className={styles.card}>
           <div className={styles.cardHeading}>Form Transaksi Masuk</div>

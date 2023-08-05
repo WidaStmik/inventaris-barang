@@ -30,8 +30,8 @@ export default function Ruangan() {
   }));
 
   const columns = [
-    { field: "kode", headerName: "Kode", width: 150 },
-    { field: "nama", headerName: "Nama", width: 150 },
+    { field: "kode", headerName: "Kode Inventaris", width: 150 },
+    { field: "nama", headerName: "Nama Kondisi", width: 150 },
     {
       field: "actions",
       headerName: "Actions",

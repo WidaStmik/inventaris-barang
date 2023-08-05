@@ -52,7 +52,7 @@ export default function Barang() {
   return (
     <div>
       <Head>
-        <title>Barang</title>
+        <title>Inventaris Barang</title>
       </Head>
       <Box sx={{ width: "100%" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -69,7 +69,7 @@ export default function Barang() {
         <TabPanel value={value} index={0}>
           <Card elevation={2} className={styles.card}>
             <div className={styles.header}>
-              <div className={styles.cardHeading}>Daftar Nama Barang</div>
+              <div className={styles.cardHeading}>Daftar Nama Inventaris Barang</div>
               <BarangDialog />
             </div>
 
