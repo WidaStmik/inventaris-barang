@@ -381,12 +381,26 @@ export const useDataBarang = () => {
           const kondisi = await getDoc(doc(db, "kondisi", data.kondisiId));
           const ruangan = await getDoc(doc(db, "ruangan", data.ruanganId));
           const user = await getDoc(doc(db, "users", data.userId));
+          const peminjamanQuery = await query(
+            collection(db, "peminjaman"),
+            where("barangId", "==", data.barangId),
+            where("ruanganId", "==", data.ruanganId)
+          );
+
+          const peminjaman = await getDocs(peminjamanQuery);
+          const peminjamanData = [];
+
+          peminjaman.forEach((doc) => {
+            peminjamanData.push({ id: doc.id, ...doc.data() });
+          });
+
           retunedData.push({
             id: docs.id,
-            barang: barang.data(),
-            kondisi: kondisi.data(),
-            ruangan: ruangan.data(),
+            barang: { ...barang.data(), id: barang.id },
+            kondisi: { ...kondisi.data(), id: kondisi.id },
+            ruangan: { ...ruangan.data(), id: ruangan.id },
             user: { ...user.data(), id: user.id },
+            peminjaman: peminjamanData,
             ...data,
           });
         });
@@ -429,6 +443,47 @@ export const deleteDataBarang = async (id) => {
         throw new Error("No such document!");
       }
       await deleteDoc(doc(db, "barang", id));
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+      throw new Error("No such document!");
+    }
+  } catch (e) {
+    console.error("Error removing document: ", e);
+  }
+};
+
+export const updateDataBarang = async (id, data) => {
+  try {
+    const barangRef = doc(db, "barang", id);
+    const barangDoc = await getDoc(barangRef);
+
+    if (barangDoc.exists()) {
+      const barangData = barangDoc.data();
+      const jumlah = data.jumlah;
+      const diff = jumlah - barangData.jumlah;
+      const barang = barangData.barangId;
+
+      const stokBarangRef = doc(db, "nama-barang", barang);
+      const stokBarang = await getDoc(stokBarangRef);
+
+      if (stokBarang.exists()) {
+        const stokBarangData = stokBarang.data();
+        const stok = stokBarangData.stok || 0;
+        const stokBaru = stok + parseInt(diff);
+
+        await updateDoc(stokBarangRef, {
+          stok: stokBaru,
+        });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+        throw new Error("No such document!");
+      }
+
+      await updateDoc(barangRef, {
+        ...data,
+      });
     } else {
       // doc.data() will be undefined in this case
       console.log("No such document!");
