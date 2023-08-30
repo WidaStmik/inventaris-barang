@@ -377,6 +377,7 @@ export const useDataBarang = () => {
 
         querySnapshot.forEach(async (docs) => {
           const data = docs.data();
+          const kode = await getDoc(doc(db, "nama-barang", data.kodeId));
           const barang = await getDoc(doc(db, "nama-barang", data.barangId));
           const kondisi = await getDoc(doc(db, "kondisi", data.kondisiId));
           const ruangan = await getDoc(doc(db, "ruangan", data.ruanganId));
@@ -396,6 +397,7 @@ export const useDataBarang = () => {
 
           retunedData.push({
             id: docs.id,
+            kode: { ...barang.data(), id: kode.id },
             barang: { ...barang.data(), id: barang.id },
             kondisi: { ...kondisi.data(), id: kondisi.id },
             ruangan: { ...ruangan.data(), id: ruangan.id },
