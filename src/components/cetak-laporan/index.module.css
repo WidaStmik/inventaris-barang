@@ -1,0 +1,39 @@
+.container {
+  max-width: 793.7007874px;
+  background-color: white;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.kopsurat {
+  max-width: 95%;
+  position: relative;
+  left: 24px;
+}
+
+.content {
+  padding: 0px 40px 20px 40px;
+}
+
+.subtitle {
+  text-align: center;
+}
+
+.table {
+  height: 400px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.signature {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  margin-right: 20px;
+  text-align: center;
+}
