@@ -108,6 +108,7 @@ export default function DataBarang() {
   const tableData = data.map((item) => ({
     id: item.id,
     nama: item.barang?.namaBarang,
+    kode: item.barang?.kodeBarang,
     kondisi: item.kondisi.namaKondisi,
     ruangan: item.ruangan.namaRuangan,
     jumlah: item.jumlah,
@@ -158,6 +159,7 @@ export default function DataBarang() {
   const columns = [
     { field: "id", headerName: "ID", width: 70 },
     { field: "nama", headerName: "Nama Barang", width: 200 },
+    { field: "kode", headerName: "Kode Barang", width: 200 },
     { field: "kondisi", headerName: "Kondisi", width: 200 },
     { field: "ruangan", headerName: "Ruangan", width: 200 },
     { field: "jumlah", headerName: "Jumlah", width: 100 },
